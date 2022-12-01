@@ -1,0 +1,25 @@
+version: 0.2
+
+env:
+  variables:
+    STAGE: "dev"
+  parameter-store:
+    IDEAS_TABLE_NAME: /iideass/dev/be/IDEAS_TABLE_NAME
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  pre_build:
+    commands:
+      - echo "Installing dependencies"
+      - npm ci
+  build:
+    commands:
+      - echo "Running tests (SKIPPED FOR NOW STEP)"
+      # - npm run test
+      - echo "Building project"
+      - npm run build
+  post_build:
+    commands:
+      - echo "Deploying to dev environment"
+      - npm run deploy
