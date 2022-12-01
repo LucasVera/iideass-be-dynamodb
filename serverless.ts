@@ -2,7 +2,7 @@ import type { AWS } from '@serverless/typescript';
 import * as functions from '@functions/index';
 
 // Resources
-import Resources from './Resources'
+import Resources from './aws/Resources'
 
 const serverlessConfiguration: AWS = {
   service: 'iideass-be-dynamodb',
