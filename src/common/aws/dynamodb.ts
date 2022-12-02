@@ -6,6 +6,9 @@ import {
   QueryCommand,
   QueryCommandInput,
   QueryCommandOutput,
+  GetItemCommand,
+  GetItemCommandInput,
+  GetItemCommandOutput,
 } from '@aws-sdk/client-dynamodb'
 import { logMessage } from '@common/util/logger'
 
@@ -34,6 +37,23 @@ interface DynamoDbTypeFormat {
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
 })
+
+const getItem = (
+  TableName: string,
+  primaryKey: DynamoDbProp,
+  sortKey?: DynamoDbProp,
+): Promise<GetItemCommandOutput> => {
+  const Key = { [primaryKey.name]: getDynamoDbFormattedProp(primaryKey.value) }
+  if (sortKey) Key[sortKey.name] = getDynamoDbFormattedProp(sortKey.value)
+  const input: GetItemCommandInput = {
+    TableName,
+    Key,
+  }
+
+  const command = new GetItemCommand(input)
+
+  return client.send(command)
+}
 
 const queryItems = async (
   TableName: string,
@@ -101,7 +121,7 @@ const objToDynamoItem = (obj: object) => {
   return dynamoItem
 }
 
-const getDynamoDbFormattedProp = (value: any): object => {
+const getDynamoDbFormattedProp = (value: any): any => {
   const typeFound = availableTypes.find(({ type }) => typeof value === type)
   if (!typeFound || !typeFound.type) {
     logMessage('Type not supported for conversion to dynamodb', { value, typeFound })
@@ -111,7 +131,7 @@ const getDynamoDbFormattedProp = (value: any): object => {
 
   if (!dynamoDbPropType) return null
 
-  return { [dynamoDbPropType]: value }
+  return { [dynamoDbPropType]: value.toString ? value.toString() : value }
 }
 
 const getJsPropFromDynamoDbProp = (dynamoDbProp: object): any => {
@@ -144,6 +164,7 @@ const dynamoDbItemsToJsObjects = (Items: any[]): object[] => Items.map(Item => {
 
 export default {
   putItem,
+  getItem,
   queryItems,
   dynamoDbItemsToJsObjects,
 }

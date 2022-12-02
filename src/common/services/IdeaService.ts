@@ -1,7 +1,7 @@
 import Repository from "@common/repository/BaseRepository";
 import { IdeaType, IdeaDto } from '../models/Idea'
 import Idea from '../models/Idea'
-import { DynamoDbFilterAllDto, DynamoDbFilterAllResult } from "@common/repository/DynamoRepository";
+import { DynamoDbFilterAllDto, DynamoDbFilterAllResult, DynamoDbFindByPkDto } from "@common/repository/DynamoRepository";
 
 export default class IdeaService {
   private repository: Repository
@@ -55,5 +55,27 @@ export default class IdeaService {
     ).toDto())
 
     return { ideas, count }
+  }
+
+  async getIdea(email: string, subject: string): Promise<any> {
+    const filter: DynamoDbFindByPkDto = {
+      pk: { name: 'email', value: email },
+      sk: { name: 'subject', value: subject },
+    }
+
+    const result = await this.repository.findByPk(filter)
+
+    if (!result) return result
+
+    return new Idea(
+      result.id,
+      result.email,
+      result.subject,
+      result.description,
+      result.type,
+      result.createdAt,
+      result.updatedAt,
+      result.deletedAt
+    ).toDto()
   }
 }
