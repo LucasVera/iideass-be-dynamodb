@@ -14,7 +14,7 @@ phases:
   pre_build:
     commands:
       - echo "Installing dependencies"
-      - npm ci
+      - npm install
   build:
     commands:
       - echo "Running tests (SKIPPED FOR NOW)"
