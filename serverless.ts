@@ -41,6 +41,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:Update*',
               'dynamodb:PutItem',
             ],
+            Resource: 'arn:aws:dynamodb:*:*:table/${env:IDEAS_TABLE_NAME}'
           },
         ],
       },
