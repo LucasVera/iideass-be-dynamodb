@@ -19,7 +19,6 @@ import {
 } from '@aws-sdk/client-dynamodb'
 import { logMessage } from '@common/util/logger'
 
-
 export enum DynamoDbFilterOperation {
   CONTAINS = 'contains',
   BEGINS_WITH = 'begins_with',
@@ -50,7 +49,7 @@ const deleteItem = (TableName: string, pk: DynamoDbProp, sk?: DynamoDbProp): Pro
   const Key = buildKey(pk, sk)
   const input: DeleteItemCommandInput = {
     TableName,
-    Key
+    Key,
   }
 
   const command = new DeleteItemCommand(input)
@@ -58,13 +57,20 @@ const deleteItem = (TableName: string, pk: DynamoDbProp, sk?: DynamoDbProp): Pro
   return client.send(command)
 }
 
-const updateItem = (TableName: string, propsToUpdate: DynamoDbProp[], pk: DynamoDbProp, sk?: DynamoDbProp): Promise<UpdateItemCommandOutput> => {
+const updateItem = (
+  TableName: string,
+  propsToUpdate: DynamoDbProp[],
+  pk: DynamoDbProp,
+  sk?: DynamoDbProp
+): Promise<UpdateItemCommandOutput> => {
   const Key = buildKey(pk, sk)
   const ExpressionAttributeValues = {}
-  const UpdateExpression = propsToUpdate.reduce((acum, { name, value }) => {
-    ExpressionAttributeValues[`:${name}`] = getDynamoDbFormattedProp(value)
-    return `${acum} ${name} = :${name},`
-  }, 'set').slice(0, -1)
+  const UpdateExpression = propsToUpdate
+    .reduce((acum, { name, value }) => {
+      ExpressionAttributeValues[`:${name}`] = getDynamoDbFormattedProp(value)
+      return `${acum} ${name} = :${name},`
+    }, 'set')
+    .slice(0, -1)
 
   const input: UpdateItemCommandInput = {
     TableName,
@@ -80,11 +86,7 @@ const updateItem = (TableName: string, propsToUpdate: DynamoDbProp[], pk: Dynamo
   return client.send(command)
 }
 
-const getItem = (
-  TableName: string,
-  pk: DynamoDbProp,
-  sk?: DynamoDbProp,
-): Promise<GetItemCommandOutput> => {
+const getItem = (TableName: string, pk: DynamoDbProp, sk?: DynamoDbProp): Promise<GetItemCommandOutput> => {
   const Key = buildKey(pk, sk)
   const input: GetItemCommandInput = {
     TableName,
@@ -115,8 +117,7 @@ const queryItems = async (
     filters.forEach(({ operation, prop }) => {
       if (operation === DynamoDbFilterOperation.BEGINS_WITH || operation === DynamoDbFilterOperation.CONTAINS) {
         FilterExpression += ` ${operation} (${prop.name}, :${prop.name})`
-      }
-      else {
+      } else {
         FilterExpression += `${prop.name} ${operation} :${prop.name}`
       }
       ExpressionAttributeValues[`:${prop.name}`] = getDynamoDbFormattedProp(prop.value)
@@ -180,7 +181,11 @@ const getJsPropFromDynamoDbProp = (dynamoDbProp: object): any => {
   const propValueStr = dynamoDbProp[dynamoDbType]
   const typeFound = availableTypes.find(({ dynamoDbPropType }) => dynamoDbPropType === dynamoDbType)
   if (!typeFound || !typeFound.type) {
-    logMessage('Type not supported for conversion from dynamodb', { dynamoDbProp, dynamoDbType, propValue: propValueStr })
+    logMessage('Type not supported for conversion from dynamodb', {
+      dynamoDbProp,
+      dynamoDbType,
+      propValue: propValueStr,
+    })
     return null
   }
   const { type } = typeFound
@@ -190,17 +195,18 @@ const getJsPropFromDynamoDbProp = (dynamoDbProp: object): any => {
   return !!propValueStr
 }
 
-const dynamoDbItemsToJsObjects = (Items: any[]): object[] => Items.map(Item => {
-  const propNames = Object.keys(Item)
-  const resultObj = {}
-  propNames.forEach(propName => {
-    const dynamoDbProp = Item[propName]
-    const propValue = getJsPropFromDynamoDbProp(dynamoDbProp)
-    resultObj[propName] = propValue
-  })
+const dynamoDbItemsToJsObjects = (Items: any[]): object[] =>
+  Items.map((Item) => {
+    const propNames = Object.keys(Item)
+    const resultObj = {}
+    propNames.forEach((propName) => {
+      const dynamoDbProp = Item[propName]
+      const propValue = getJsPropFromDynamoDbProp(dynamoDbProp)
+      resultObj[propName] = propValue
+    })
 
-  return resultObj
-})
+    return resultObj
+  })
 
 const buildKey = (pk: DynamoDbProp, sk?: DynamoDbProp): Record<string, AttributeValue> => {
   const Key = { [pk.name]: getDynamoDbFormattedProp(pk.value) }

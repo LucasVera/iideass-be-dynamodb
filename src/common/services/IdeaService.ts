@@ -1,4 +1,4 @@
-import Repository from "@common/repository/BaseRepository";
+import Repository from '@common/repository/BaseRepository'
 import { IdeaType, IdeaDto } from '../models/Idea'
 import Idea from '../models/Idea'
 import {
@@ -7,9 +7,9 @@ import {
   DynamoDbFilterAllResult,
   DynamoDbFindByPkDto,
   DynamoDbUpdateOneDto,
-} from "@common/repository/DynamoRepository";
-import { getUnixTimestamp } from "@common/util/datetime";
-import { BadInputError, NotFoundError } from "@common/errors/CustomError";
+} from '@common/repository/DynamoRepository'
+import { getUnixTimestamp } from '@common/util/datetime'
+import { BadInputError, NotFoundError } from '@common/errors/CustomError'
 
 export default class IdeaService {
   private repository: Repository
@@ -26,12 +26,7 @@ export default class IdeaService {
    * @param ideaType (IdeaType)- type of the idea (enum)
    * @returns Newly created idea
    */
-  async createIdea(
-    email: string,
-    subject: string,
-    description: string,
-    ideaType: IdeaType
-  ): Promise<IdeaDto> {
+  async createIdea(email: string, subject: string, description: string, ideaType: IdeaType): Promise<IdeaDto> {
     const idea = Idea.generate(email, subject, description, ideaType)
     idea.preCreate()
     const ideaDto: IdeaDto = await this.repository.save(idea.toDto())
@@ -44,23 +39,25 @@ export default class IdeaService {
    * @param email (string) - Email of the user
    * @returns List of ideas
    */
-  async findUserIdeas(email: string): Promise<{ ideas: IdeaDto[], count: number }> {
+  async findUserIdeas(email: string): Promise<{ ideas: IdeaDto[]; count: number }> {
     const filters: DynamoDbFilterAllDto = {
       key: { pk: { name: 'email', value: email } },
     }
 
-    const { items, count } = await this.repository.findAll(filters) as DynamoDbFilterAllResult
+    const { items, count } = (await this.repository.findAll(filters)) as DynamoDbFilterAllResult
 
-    const ideas = items.map(idea => new Idea(
-      idea.id,
-      idea.email,
-      idea.subject,
-      idea.description,
-      idea.ideaType,
-      idea.createdAt,
-      idea.updatedAt,
-      idea.deletedAt
-    ).toDto())
+    const ideas = items.map((idea) =>
+      new Idea(
+        idea.id,
+        idea.email,
+        idea.subject,
+        idea.description,
+        idea.ideaType,
+        idea.createdAt,
+        idea.updatedAt,
+        idea.deletedAt
+      ).toDto()
+    )
 
     return { ideas, count }
   }
@@ -89,12 +86,7 @@ export default class IdeaService {
     )
   }
 
-  async updateIdea(
-    email: string,
-    subject: string,
-    description: string,
-    ideaType: IdeaType,
-  ): Promise<boolean> {
+  async updateIdea(email: string, subject: string, description: string, ideaType: IdeaType): Promise<boolean> {
     const propsToUpdate: any[] = [{ updatedAt: getUnixTimestamp() }]
     if (description) propsToUpdate.push({ description })
     if (ideaType) propsToUpdate.push({ ideaType })
@@ -117,7 +109,7 @@ export default class IdeaService {
     const ideaDto = idea.toDto()
     const key = {
       pk: { name: 'email', value: ideaDto.email },
-      sk: { name: 'subject', value: ideaDto.subject }
+      sk: { name: 'subject', value: ideaDto.subject },
     }
 
     const deleteOneDto: DynamoDbDeleteOneDto = { key }

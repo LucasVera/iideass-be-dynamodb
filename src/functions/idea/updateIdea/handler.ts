@@ -7,21 +7,14 @@ import { IdeaType } from '@common/models/Idea'
 import handleCatch from '@common/errors/handleCatch'
 import { validateInput } from './validator'
 
-const {
-  IDEAS_TABLE_NAME: TableName
-} = process.env
+const { IDEAS_TABLE_NAME: TableName } = process.env
 
 const updateIdea: ApiGatewayEvent<typeof schema> = async (event) => {
   try {
     validateInput(event.body)
 
     const {
-      body: {
-        email,
-        description,
-        subject,
-        ideaType,
-      }
+      body: { email, description, subject, ideaType },
     } = event
 
     const service = new IdeaService(new DynamoRepository({ TableName }))
@@ -33,8 +26,7 @@ const updateIdea: ApiGatewayEvent<typeof schema> = async (event) => {
     return successResponse({
       success,
     })
-  }
-  catch (ex) {
+  } catch (ex) {
     return handleCatch(ex)
   }
 }

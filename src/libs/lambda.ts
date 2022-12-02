@@ -13,10 +13,7 @@ export const middyfy = (handler, customMiddlewares?: CustomMiddlewares) => {
   const middlewares = [bodyParser(), cors()]
 
   if (customMiddlewares) {
-    const {
-      validateEmptyBody,
-      validateEmptyQueryString
-    } = customMiddlewares
+    const { validateEmptyBody, validateEmptyQueryString } = customMiddlewares
 
     if (validateEmptyBody) middlewares.push(validateEmptyBodyMiddleware())
     if (validateEmptyQueryString) middlewares.push(validateEmptyQueryStringMiddleware())

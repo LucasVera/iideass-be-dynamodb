@@ -6,9 +6,7 @@ import handleCatch from '@common/errors/handleCatch'
 import { validateInput } from './validator'
 import { APIGatewayEvent } from 'aws-lambda'
 
-const {
-  IDEAS_TABLE_NAME: TableName
-} = process.env
+const { IDEAS_TABLE_NAME: TableName } = process.env
 
 const listUserIdeas = async (event: APIGatewayEvent) => {
   try {
@@ -23,8 +21,7 @@ const listUserIdeas = async (event: APIGatewayEvent) => {
       count,
       ideas,
     })
-  }
-  catch (ex) {
+  } catch (ex) {
     return handleCatch(ex)
   }
 }

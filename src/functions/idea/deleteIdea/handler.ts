@@ -6,9 +6,7 @@ import handleCatch from '@common/errors/handleCatch'
 import { validateInput } from './validator'
 import { APIGatewayEvent } from 'aws-lambda'
 
-const {
-  IDEAS_TABLE_NAME: TableName
-} = process.env
+const { IDEAS_TABLE_NAME: TableName } = process.env
 
 const deleteIdea = async (event: APIGatewayEvent) => {
   try {
@@ -23,10 +21,9 @@ const deleteIdea = async (event: APIGatewayEvent) => {
     const deleteAtTimestamp = await service.deleteIdea(dbIdea)
 
     return successResponse({
-      deleteAtTimestamp
+      deleteAtTimestamp,
     })
-  }
-  catch (ex) {
+  } catch (ex) {
     return handleCatch(ex)
   }
 }

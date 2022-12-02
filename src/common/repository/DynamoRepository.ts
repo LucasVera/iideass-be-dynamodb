@@ -6,8 +6,8 @@ export interface DynamoDbClientRepoConfig {
 }
 
 export interface DynamoDbPk {
-  pk: DynamoDbProp,
-  sk?: DynamoDbProp,
+  pk: DynamoDbProp
+  sk?: DynamoDbProp
 }
 
 export interface DynamoDbDeleteOneDto {
@@ -15,7 +15,7 @@ export interface DynamoDbDeleteOneDto {
 }
 
 export interface DynamoDbUpdateOneDto {
-  propsToUpdate: any[],
+  propsToUpdate: any[]
   key: DynamoDbPk
 }
 
@@ -55,7 +55,7 @@ export default class DynamoRepository extends Repository {
       filterAllDto.key.pk,
       filterAllDto.key.sk,
       filterAllDto.skOperation,
-      filterAllDto.filters,
+      filterAllDto.filters
     )
 
     const items = dynamodb.dynamoDbItemsToJsObjects(Items)
@@ -75,7 +75,7 @@ export default class DynamoRepository extends Repository {
 
   async updateOne(updateOneDto: DynamoDbUpdateOneDto): Promise<boolean> {
     const propsToUpdate: DynamoDbProp[] = []
-    updateOneDto.propsToUpdate.forEach(propObj => {
+    updateOneDto.propsToUpdate.forEach((propObj) => {
       const propName = Object.keys(propObj)[0]
       propsToUpdate.push({
         name: propName,
@@ -90,10 +90,7 @@ export default class DynamoRepository extends Repository {
 
   async deleteOne(deleteOneDto: DynamoDbDeleteOneDto): Promise<boolean> {
     const {
-      key: {
-        pk,
-        sk,
-      }
+      key: { pk, sk },
     } = deleteOneDto
     await dynamodb.deleteItem(this.clientConfig.TableName, pk, sk)
 
