@@ -6,8 +6,8 @@ export type ApiGatewayEvent<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGa
 
 const formatJSONResponse = (response: ApiResponse): ApiGatewayResponse => {
   return {
-    statusCode: 200,
-    body: JSON.stringify(response),
+    statusCode: response.statusCode || 200,
+    body: JSON.stringify(response.body),
   }
 }
 

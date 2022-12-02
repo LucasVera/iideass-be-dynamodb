@@ -4,27 +4,36 @@ import { ApiGatewayEvent, successResponse } from '@libs/api-gateway'
 import { middyfy } from '@libs/lambda'
 import schema from './schema'
 import { IdeaType } from '@common/models/Idea'
+import handleCatch from '@common/errors/handleCatch'
+import { validateInput } from './validator'
+
 const {
   IDEAS_TABLE_NAME: TableName
 } = process.env
 
-const hello: ApiGatewayEvent<typeof schema> = async (event) => {
+const createIdea: ApiGatewayEvent<typeof schema> = async (event) => {
+  try {
+    validateInput(event.body)
 
-  const {
-    body: {
-      email,
-      description,
-      subject,
-      type,
-    }
-  } = event
+    const {
+      body: {
+        email,
+        description,
+        subject,
+        type,
+      }
+    } = event
 
-  const service = new IdeaService(new DynamoRepository({ TableName }))
-  const idea = await service.createIdea(email, subject, description, type as IdeaType)
+    const service = new IdeaService(new DynamoRepository({ TableName }))
+    const idea = await service.createIdea(email, subject, description, type as IdeaType)
 
-  return successResponse({
-    idea,
-  })
+    return successResponse({
+      idea,
+    })
+  }
+  catch (ex) {
+    return handleCatch(ex)
+  }
 }
 
-export const main = middyfy(hello)
+export const main = middyfy(createIdea, { validateEmptyBody: true })
