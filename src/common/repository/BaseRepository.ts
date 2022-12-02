@@ -1,5 +1,5 @@
 export default abstract class Repository {
-  save(_saveDto: any): any {
+  save(_entityDto: any): any {
     throw new Error('Repositories must implement "save" method')
   }
 
@@ -13,5 +13,9 @@ export default abstract class Repository {
 
   updateOne(_updateOneDto: any): any {
     throw new Error('Repositories must implement "updateOne" method')
+  }
+
+  deleteOne(_deleteOneDto: any): any {
+    throw new Error('Repositories must implement "deleteOne" method')
   }
 }

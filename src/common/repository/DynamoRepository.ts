@@ -10,6 +10,10 @@ export interface DynamoDbPk {
   sk?: DynamoDbProp,
 }
 
+export interface DynamoDbDeleteOneDto {
+  key: DynamoDbPk
+}
+
 export interface DynamoDbUpdateOneDto {
   propsToUpdate: any[],
   key: DynamoDbPk
@@ -39,10 +43,10 @@ export default class DynamoRepository extends Repository {
     this.clientConfig = config
   }
 
-  async save(saveDto: object) {
-    await dynamodb.putItem(this.clientConfig.TableName, saveDto)
+  async save(entityDto: object): Promise<object> {
+    await dynamodb.putItem(this.clientConfig.TableName, entityDto)
 
-    return saveDto
+    return entityDto
   }
 
   async findAll(filterAllDto: DynamoDbFilterAllDto): Promise<DynamoDbFilterAllResult> {
@@ -80,6 +84,18 @@ export default class DynamoRepository extends Repository {
     })
 
     await dynamodb.updateItem(this.clientConfig.TableName, propsToUpdate, updateOneDto.key.pk, updateOneDto.key.sk)
+
+    return true
+  }
+
+  async deleteOne(deleteOneDto: DynamoDbDeleteOneDto): Promise<boolean> {
+    const {
+      key: {
+        pk,
+        sk,
+      }
+    } = deleteOneDto
+    await dynamodb.deleteItem(this.clientConfig.TableName, pk, sk)
 
     return true
   }

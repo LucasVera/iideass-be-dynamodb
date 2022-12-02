@@ -24,4 +24,5 @@ export const validatePropIsInEnum = (enumeration: any, prop: any, errMsg): void 
 
 export const ValidationMessages = {
   EMAIL_IS_REQUIRED: 'Email is required.',
+  SUBJECT_IS_REQUIRED: 'Subject is required.',
 }

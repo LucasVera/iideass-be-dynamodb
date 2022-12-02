@@ -55,6 +55,13 @@ export default class Idea extends Model {
     this.updatedAt = currentTimestamp
   }
 
+  preDelete = () => {
+    const currentTimestamp = getUnixTimestamp()
+    this.updatedAt = currentTimestamp
+    this.deletedAt = currentTimestamp
+    this.subject = `${this.subject}-${currentTimestamp.toString()}`
+  }
+
   static generate = (email: string, subject: string, description: string, ideaType: IdeaType) =>
     new Idea(generateRandom(), email, subject, description, ideaType)
 }

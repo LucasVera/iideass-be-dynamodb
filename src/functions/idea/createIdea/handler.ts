@@ -6,7 +6,6 @@ import schema from './schema'
 import { IdeaType } from '@common/models/Idea'
 import handleCatch from '@common/errors/handleCatch'
 import { validateInput } from './validator'
-import { BadInputError } from '@common/errors/CustomError'
 
 const {
   IDEAS_TABLE_NAME: TableName
@@ -26,8 +25,8 @@ const createIdea: ApiGatewayEvent<typeof schema> = async (event) => {
     } = event
 
     const service = new IdeaService(new DynamoRepository({ TableName }))
-    const dbIdea = await service.getIdea(email, subject)
-    if (dbIdea && dbIdea.id) throw new BadInputError('Idea already exists', { email, subject })
+
+    await service.validateIdeaDoesntExist(email, subject)
 
     const idea = await service.createIdea(email, subject, description, ideaType as IdeaType)
 

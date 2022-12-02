@@ -12,6 +12,9 @@ import {
   UpdateItemCommand,
   UpdateItemCommandInput,
   UpdateItemCommandOutput,
+  DeleteItemCommand,
+  DeleteItemCommandInput,
+  DeleteItemCommandOutput,
   AttributeValue,
 } from '@aws-sdk/client-dynamodb'
 import { logMessage } from '@common/util/logger'
@@ -42,6 +45,18 @@ interface DynamoDbTypeFormat {
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
 })
+
+const deleteItem = (TableName: string, pk: DynamoDbProp, sk?: DynamoDbProp): Promise<DeleteItemCommandOutput> => {
+  const Key = buildKey(pk, sk)
+  const input: DeleteItemCommandInput = {
+    TableName,
+    Key
+  }
+
+  const command = new DeleteItemCommand(input)
+
+  return client.send(command)
+}
 
 const updateItem = (TableName: string, propsToUpdate: DynamoDbProp[], pk: DynamoDbProp, sk?: DynamoDbProp): Promise<UpdateItemCommandOutput> => {
   const Key = buildKey(pk, sk)
@@ -199,5 +214,6 @@ export default {
   getItem,
   queryItems,
   updateItem,
+  deleteItem,
   dynamoDbItemsToJsObjects,
 }

@@ -2,12 +2,14 @@ import Repository from "@common/repository/BaseRepository";
 import { IdeaType, IdeaDto } from '../models/Idea'
 import Idea from '../models/Idea'
 import {
+  DynamoDbDeleteOneDto,
   DynamoDbFilterAllDto,
   DynamoDbFilterAllResult,
   DynamoDbFindByPkDto,
   DynamoDbUpdateOneDto,
 } from "@common/repository/DynamoRepository";
 import { getUnixTimestamp } from "@common/util/datetime";
+import { BadInputError, NotFoundError } from "@common/errors/CustomError";
 
 export default class IdeaService {
   private repository: Repository
@@ -63,7 +65,7 @@ export default class IdeaService {
     return { ideas, count }
   }
 
-  async getIdea(email: string, subject: string): Promise<any> {
+  async findOne(email: string, subject: string): Promise<Idea> {
     const filter: DynamoDbFindByPkDto = {
       key: {
         pk: { name: 'email', value: email },
@@ -84,7 +86,7 @@ export default class IdeaService {
       result.createdAt,
       result.updatedAt,
       result.deletedAt
-    ).toDto()
+    )
   }
 
   async updateIdea(
@@ -93,7 +95,7 @@ export default class IdeaService {
     description: string,
     ideaType: IdeaType,
   ): Promise<boolean> {
-    const propsToUpdate = []
+    const propsToUpdate: any[] = [{ updatedAt: getUnixTimestamp() }]
     if (description) propsToUpdate.push({ description })
     if (ideaType) propsToUpdate.push({ ideaType })
 
@@ -110,21 +112,39 @@ export default class IdeaService {
     return true
   }
 
-  async deleteIdea(email: string, subject: string): Promise<number> {
-    const timestamp = getUnixTimestamp()
-    const updateOneDto: DynamoDbUpdateOneDto = {
-      key: {
-        pk: { name: 'email', value: email },
-        sk: { name: 'subject', value: subject },
-      },
-      propsToUpdate: [
-        { subject: `${subject}-deletedAt-${timestamp.toString()}` },
-        { deletedAt: timestamp },
-      ]
+  async deleteIdea(idea: Idea): Promise<number> {
+    // delete first, then re-create
+    const ideaDto = idea.toDto()
+    const key = {
+      pk: { name: 'email', value: ideaDto.email },
+      sk: { name: 'subject', value: ideaDto.subject }
     }
 
-    await this.repository.updateOne(updateOneDto)
+    const deleteOneDto: DynamoDbDeleteOneDto = { key }
 
-    return timestamp
+    await this.repository.deleteOne(deleteOneDto)
+
+    idea.preDelete()
+
+    const deletedIdea = await this.repository.save(idea.toDto())
+
+    return deletedIdea
+  }
+
+  async findAndValidateIdeaExists(email: string, subject: string): Promise<Idea> {
+    const err = new NotFoundError('Idea not found', { email, subject })
+    const dbIdea = await this.findOne(email, subject)
+    if (!dbIdea) throw err
+
+    const dto = dbIdea.toDto()
+    if (!dto || !dto.email) throw err
+
+    return dbIdea
+  }
+
+  async validateIdeaDoesntExist(email: string, subject: string): Promise<void> {
+    const dbIdea = await this.findOne(email, subject)
+    const dto = dbIdea.toDto()
+    if (dto && dto.email) throw new BadInputError('Idea already exists', { email, subject })
   }
 }
