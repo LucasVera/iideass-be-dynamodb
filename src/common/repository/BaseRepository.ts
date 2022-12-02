@@ -1,5 +1,5 @@
 export default abstract class Repository {
-  save(_dto: any): any {
+  save(_saveDto: any): any {
     throw new Error('Repositories must implement "save" method')
   }
 
@@ -9,5 +9,9 @@ export default abstract class Repository {
 
   findByPk(_findByPkDto: any): any {
     throw new Error('Repositories must implement "findOne" method')
+  }
+
+  updateOne(_updateOneDto: any): any {
+    throw new Error('Repositories must implement "updateOne" method')
   }
 }

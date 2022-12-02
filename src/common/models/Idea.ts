@@ -50,6 +50,11 @@ export default class Idea extends Model {
     this.updatedAt = currentTimestamp
   }
 
+  preUpdate = () => {
+    const currentTimestamp = getUnixTimestamp()
+    this.updatedAt = currentTimestamp
+  }
+
   static generate = (email: string, subject: string, description: string, type: IdeaType) =>
     new Idea(generateRandom(), email, subject, description, type)
 }

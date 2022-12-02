@@ -1,7 +1,12 @@
 import Repository from "@common/repository/BaseRepository";
 import { IdeaType, IdeaDto } from '../models/Idea'
 import Idea from '../models/Idea'
-import { DynamoDbFilterAllDto, DynamoDbFilterAllResult, DynamoDbFindByPkDto } from "@common/repository/DynamoRepository";
+import {
+  DynamoDbFilterAllDto,
+  DynamoDbFilterAllResult,
+  DynamoDbFindByPkDto,
+  DynamoDbUpdateOneDto,
+} from "@common/repository/DynamoRepository";
 
 export default class IdeaService {
   private repository: Repository
@@ -38,7 +43,7 @@ export default class IdeaService {
    */
   async findUserIdeas(email: string): Promise<{ ideas: IdeaDto[], count: number }> {
     const filters: DynamoDbFilterAllDto = {
-      pk: { name: 'email', value: email },
+      key: { pk: { name: 'email', value: email } },
     }
 
     const { items, count } = await this.repository.findAll(filters) as DynamoDbFilterAllResult
@@ -59,8 +64,10 @@ export default class IdeaService {
 
   async getIdea(email: string, subject: string): Promise<any> {
     const filter: DynamoDbFindByPkDto = {
-      pk: { name: 'email', value: email },
-      sk: { name: 'subject', value: subject },
+      key: {
+        pk: { name: 'email', value: email },
+        sk: { name: 'subject', value: subject },
+      },
     }
 
     const result = await this.repository.findByPk(filter)
@@ -77,5 +84,28 @@ export default class IdeaService {
       result.updatedAt,
       result.deletedAt
     ).toDto()
+  }
+
+  async updateIdea(
+    email: string,
+    subject: string,
+    description: string,
+    type: IdeaType,
+  ): Promise<boolean> {
+    const propsToUpdate = []
+    if (description) propsToUpdate.push({ description })
+    if (type) propsToUpdate.push({ type })
+
+    const updateOneDto: DynamoDbUpdateOneDto = {
+      key: {
+        pk: { name: 'email', value: email },
+        sk: { name: 'subject', value: subject },
+      },
+      propsToUpdate,
+    }
+
+    const success = await this.repository.updateOne(updateOneDto)
+
+    return success
   }
 }
