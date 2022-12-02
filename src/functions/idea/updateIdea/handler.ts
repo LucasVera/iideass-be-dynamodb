@@ -6,13 +6,13 @@ import schema from './schema'
 import { IdeaType } from '@common/models/Idea'
 import handleCatch from '@common/errors/handleCatch'
 import { validateInput } from './validator'
-import { BadInputError } from '@common/errors/CustomError'
+import { NotFoundError } from '@common/errors/CustomError'
 
 const {
   IDEAS_TABLE_NAME: TableName
 } = process.env
 
-const createIdea: ApiGatewayEvent<typeof schema> = async (event) => {
+const updateIdea: ApiGatewayEvent<typeof schema> = async (event) => {
   try {
     validateInput(event.body)
 
@@ -27,12 +27,12 @@ const createIdea: ApiGatewayEvent<typeof schema> = async (event) => {
 
     const service = new IdeaService(new DynamoRepository({ TableName }))
     const dbIdea = await service.getIdea(email, subject)
-    if (dbIdea && dbIdea.id) throw new BadInputError('Idea already exists', { email, subject })
+    if (!dbIdea || !dbIdea.id) throw new NotFoundError('Idea does not exist', { email, subject })
 
-    const idea = await service.createIdea(email, subject, description, ideaType as IdeaType)
+    const success = await service.updateIdea(email, subject, description, ideaType as IdeaType)
 
     return successResponse({
-      idea,
+      success,
     })
   }
   catch (ex) {
@@ -40,4 +40,4 @@ const createIdea: ApiGatewayEvent<typeof schema> = async (event) => {
   }
 }
 
-export const main = middyfy(createIdea, { validateEmptyBody: true })
+export const main = middyfy(updateIdea, { validateEmptyBody: true })

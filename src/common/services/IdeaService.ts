@@ -20,16 +20,16 @@ export default class IdeaService {
    * @param email (string) - user's email
    * @param subject (string) - subject of the idea
    * @param description (string) - description of the idea
-   * @param type (IdeaType)- type of the idea (enum)
+   * @param ideaType (IdeaType)- type of the idea (enum)
    * @returns Newly created idea
    */
   async createIdea(
     email: string,
     subject: string,
     description: string,
-    type: IdeaType
+    ideaType: IdeaType
   ): Promise<IdeaDto> {
-    const idea = Idea.generate(email, subject, description, type)
+    const idea = Idea.generate(email, subject, description, ideaType)
     idea.preCreate()
     const ideaDto: IdeaDto = await this.repository.save(idea.toDto())
 
@@ -53,7 +53,7 @@ export default class IdeaService {
       idea.email,
       idea.subject,
       idea.description,
-      idea.type,
+      idea.ideaType,
       idea.createdAt,
       idea.updatedAt,
       idea.deletedAt
@@ -79,7 +79,7 @@ export default class IdeaService {
       result.email,
       result.subject,
       result.description,
-      result.type,
+      result.ideaType,
       result.createdAt,
       result.updatedAt,
       result.deletedAt
@@ -90,11 +90,11 @@ export default class IdeaService {
     email: string,
     subject: string,
     description: string,
-    type: IdeaType,
+    ideaType: IdeaType,
   ): Promise<boolean> {
     const propsToUpdate = []
     if (description) propsToUpdate.push({ description })
-    if (type) propsToUpdate.push({ type })
+    if (ideaType) propsToUpdate.push({ ideaType })
 
     const updateOneDto: DynamoDbUpdateOneDto = {
       key: {

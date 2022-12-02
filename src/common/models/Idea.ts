@@ -7,7 +7,7 @@ export default class Idea extends Model {
   private email: string
   private subject: string
   private description: string
-  private type: IdeaType
+  private ideaType: IdeaType
   private createdAt?: number
   private updatedAt?: number
   private deletedAt?: number
@@ -17,7 +17,7 @@ export default class Idea extends Model {
     email: string,
     subject: string,
     description: string,
-    type: IdeaType,
+    ideaType: IdeaType,
     createdAt?: number,
     updatedAt?: number,
     deletedAt?: number
@@ -27,7 +27,7 @@ export default class Idea extends Model {
     this.email = email
     this.subject = subject
     this.description = description
-    this.type = type
+    this.ideaType = ideaType
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.deletedAt = deletedAt
@@ -38,7 +38,7 @@ export default class Idea extends Model {
     email: this.email,
     subject: this.subject,
     description: this.description,
-    type: this.type,
+    ideaType: this.ideaType,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
     deletedAt: this.deletedAt,
@@ -55,8 +55,8 @@ export default class Idea extends Model {
     this.updatedAt = currentTimestamp
   }
 
-  static generate = (email: string, subject: string, description: string, type: IdeaType) =>
-    new Idea(generateRandom(), email, subject, description, type)
+  static generate = (email: string, subject: string, description: string, ideaType: IdeaType) =>
+    new Idea(generateRandom(), email, subject, description, ideaType)
 }
 
 export enum IdeaType {
@@ -65,7 +65,7 @@ export enum IdeaType {
   DISH = 'Dish',
   NON_TECH_PROJECT = 'Non tech project',
   VACATION_TRIP = 'Vacation trip',
-  OTHER = 'Other',
+  OTHER = 'Other idea',
 }
 
 export interface IdeaDto {
@@ -73,7 +73,7 @@ export interface IdeaDto {
   email: string
   subject: string
   description: string
-  type: IdeaType
+  ideaType: IdeaType
   createdAt: number
   updatedAt: number
   deletedAt: number

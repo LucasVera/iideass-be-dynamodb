@@ -45,13 +45,20 @@ const client = new DynamoDBClient({
 
 const updateItem = (TableName: string, propsToUpdate: DynamoDbProp[], pk: DynamoDbProp, sk?: DynamoDbProp): Promise<UpdateItemCommandOutput> => {
   const Key = buildKey(pk, sk)
-  const UpdateExpression = propsToUpdate.reduce((acum, { name, value }) => `${acum} ${name} = ${value},`, 'set').slice(-1)
+  const ExpressionAttributeValues = {}
+  const UpdateExpression = propsToUpdate.reduce((acum, { name, value }) => {
+    ExpressionAttributeValues[`:${name}`] = getDynamoDbFormattedProp(value)
+    return `${acum} ${name} = :${name},`
+  }, 'set').slice(0, -1)
 
   const input: UpdateItemCommandInput = {
     TableName,
     UpdateExpression,
+    ExpressionAttributeValues,
     Key,
   }
+
+  console.log('¿input', input)
 
   const command = new UpdateItemCommand(input)
 

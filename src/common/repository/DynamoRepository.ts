@@ -71,13 +71,13 @@ export default class DynamoRepository extends Repository {
 
   async updateOne(updateOneDto: DynamoDbUpdateOneDto): Promise<boolean> {
     const propsToUpdate: DynamoDbProp[] = []
-
-    for (const propName in updateOneDto.propsToUpdate) {
+    updateOneDto.propsToUpdate.forEach(propObj => {
+      const propName = Object.keys(propObj)[0]
       propsToUpdate.push({
         name: propName,
-        value: updateOneDto.propsToUpdate[propName],
+        value: propObj[propName],
       })
-    }
+    })
 
     const resu = await dynamodb.updateItem(this.clientConfig.TableName, propsToUpdate, updateOneDto.key.pk, updateOneDto.key.sk)
     console.log('resu', resu)
