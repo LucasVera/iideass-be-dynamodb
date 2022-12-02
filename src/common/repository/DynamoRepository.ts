@@ -33,7 +33,6 @@ export default class DynamoRepository extends Repository {
 
   async save(dto: object) {
     await dynamodb.putItem(this.clientConfig.TableName, dto)
-    console.log('success?')
 
     return dto
   }

@@ -9,8 +9,13 @@ import {
   GetItemCommand,
   GetItemCommandInput,
   GetItemCommandOutput,
+  UpdateItemCommand,
+  UpdateItemCommandInput,
+  UpdateItemCommandOutput,
+  AttributeValue,
 } from '@aws-sdk/client-dynamodb'
 import { logMessage } from '@common/util/logger'
+
 
 export enum DynamoDbFilterOperation {
   CONTAINS = 'contains',
@@ -38,13 +43,27 @@ const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
 })
 
+const updateItem = (TableName: string, propsToUpdate: DynamoDbProp[], pk: DynamoDbProp, sk?: DynamoDbProp): Promise<UpdateItemCommandOutput> => {
+  const Key = buildKey(pk, sk)
+  const UpdateExpression = propsToUpdate.reduce((acum, { name, value }) => `${acum} ${name} = ${value},`, 'set').slice(-1)
+
+  const input: UpdateItemCommandInput = {
+    TableName,
+    UpdateExpression,
+    Key,
+  }
+
+  const command = new UpdateItemCommand(input)
+
+  return client.send(command)
+}
+
 const getItem = (
   TableName: string,
-  primaryKey: DynamoDbProp,
-  sortKey?: DynamoDbProp,
+  pk: DynamoDbProp,
+  sk?: DynamoDbProp,
 ): Promise<GetItemCommandOutput> => {
-  const Key = { [primaryKey.name]: getDynamoDbFormattedProp(primaryKey.value) }
-  if (sortKey) Key[sortKey.name] = getDynamoDbFormattedProp(sortKey.value)
+  const Key = buildKey(pk, sk)
   const input: GetItemCommandInput = {
     TableName,
     Key,
@@ -161,10 +180,17 @@ const dynamoDbItemsToJsObjects = (Items: any[]): object[] => Items.map(Item => {
   return resultObj
 })
 
+const buildKey = (pk: DynamoDbProp, sk?: DynamoDbProp): Record<string, AttributeValue> => {
+  const Key = { [pk.name]: getDynamoDbFormattedProp(pk.value) }
+  if (sk) Key[sk.name] = getDynamoDbFormattedProp(sk.value)
+
+  return Key
+}
 
 export default {
   putItem,
   getItem,
   queryItems,
+  updateItem,
   dynamoDbItemsToJsObjects,
 }
