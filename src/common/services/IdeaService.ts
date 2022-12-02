@@ -7,6 +7,7 @@ import {
   DynamoDbFindByPkDto,
   DynamoDbUpdateOneDto,
 } from "@common/repository/DynamoRepository";
+import { getUnixTimestamp } from "@common/util/datetime";
 
 export default class IdeaService {
   private repository: Repository
@@ -104,8 +105,26 @@ export default class IdeaService {
       propsToUpdate,
     }
 
-    const success = await this.repository.updateOne(updateOneDto)
+    await this.repository.updateOne(updateOneDto)
 
-    return success
+    return true
+  }
+
+  async deleteIdea(email: string, subject: string): Promise<number> {
+    const timestamp = getUnixTimestamp()
+    const updateOneDto: DynamoDbUpdateOneDto = {
+      key: {
+        pk: { name: 'email', value: email },
+        sk: { name: 'subject', value: subject },
+      },
+      propsToUpdate: [
+        { subject: `${subject}-deletedAt-${timestamp.toString()}` },
+        { deletedAt: timestamp },
+      ]
+    }
+
+    await this.repository.updateOne(updateOneDto)
+
+    return timestamp
   }
 }

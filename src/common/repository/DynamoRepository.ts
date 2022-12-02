@@ -79,8 +79,8 @@ export default class DynamoRepository extends Repository {
       })
     })
 
-    const resu = await dynamodb.updateItem(this.clientConfig.TableName, propsToUpdate, updateOneDto.key.pk, updateOneDto.key.sk)
-    console.log('resu', resu)
+    await dynamodb.updateItem(this.clientConfig.TableName, propsToUpdate, updateOneDto.key.pk, updateOneDto.key.sk)
+
     return true
   }
 }
