@@ -1,5 +1,5 @@
 /**
- * Helper function to generate a random id, from 0 to 100
- * @returns numeric id, from 0 to 100
+ * Helper function to generate a random number, from 0 to 10000
+ * @returns number, from 0 to 10000
  */
-export const generateRandomId = (): number => Math.round(Math.random() * 10000)
+export const generateRandom = (): number => Math.round(Math.random() * 10000)

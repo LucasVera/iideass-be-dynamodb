@@ -1,6 +1,5 @@
-import Repository from '@common/repository/BaseRepository'
 import { getUnixTimestamp } from '@common/util/datetime'
-import { generateRandomId } from '@common/util/number'
+import { generateRandom } from '@common/util/number'
 import Model from './BaseModel'
 
 export default class Idea extends Model {
@@ -12,8 +11,6 @@ export default class Idea extends Model {
   private createdAt?: number
   private updatedAt?: number
   private deletedAt?: number
-
-  private repository: Repository
 
   constructor(
     id: number,
@@ -36,8 +33,6 @@ export default class Idea extends Model {
     this.deletedAt = deletedAt
   }
 
-  injectRepository = (repository: Repository) => (this.repository = repository)
-
   toDto = (): IdeaDto => ({
     id: this.id,
     email: this.email,
@@ -49,15 +44,14 @@ export default class Idea extends Model {
     deletedAt: this.deletedAt,
   })
 
-  create = () => {
+  preCreate = () => {
     const currentTimestamp = getUnixTimestamp()
     this.createdAt = currentTimestamp
     this.updatedAt = currentTimestamp
-    return this.repository.save(this.toDto())
   }
 
   static generate = (email: string, subject: string, description: string, type: IdeaType) =>
-    new Idea(generateRandomId(), email, subject, description, type)
+    new Idea(generateRandom(), email, subject, description, type)
 }
 
 export enum IdeaType {
