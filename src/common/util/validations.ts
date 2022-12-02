@@ -21,3 +21,7 @@ export const validatePropIsInEnum = (enumeration: any, prop: any, errMsg): void 
     .includes(prop.toLowerCase() as any)
   if (!isValid) throw new BadInputError(errMsg, { prop })
 }
+
+export const ValidationMessages = {
+  EMAIL_IS_REQUIRED: 'Email is required.',
+}
