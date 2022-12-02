@@ -15,8 +15,7 @@ phases:
     commands:
       - echo "Installing dependencies"
       - npm install
-      - npx sls --version
-      - npx sls deploy --verbose
+      - npm install -g serverless
   build:
     commands:
       - echo "Running tests (SKIPPED FOR NOW)"
