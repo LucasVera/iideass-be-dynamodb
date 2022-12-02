@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    STAGE: "dev"
+    STAGE: 'dev'
     IDEAS_TABLE_READ_CAPACITY: 2
     IDEAS_TABLE_WRITE_CAPACITY: 2
   parameter-store:

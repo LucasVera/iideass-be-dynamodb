@@ -1,18 +1,15 @@
-import { DynamoDBClient, PutItemCommand, PutItemCommandInput, PutItemCommandOutput } from "@aws-sdk/client-dynamodb"
-import { logMessage } from "@common/util/logger"
+import { DynamoDBClient, PutItemCommand, PutItemCommandInput, PutItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { logMessage } from '@common/util/logger'
 
 const client = new DynamoDBClient({
-  region: process.env.AWS_REGION
+  region: process.env.AWS_REGION,
 })
 
 const putItem = (TableName: string, jsItem: object): Promise<PutItemCommandOutput> => {
-
   const input: PutItemCommandInput = {
     TableName,
     Item: objToDynamoItem(jsItem),
-
   }
-
   const command = new PutItemCommand(input)
   return client.send(command)
 }
@@ -24,7 +21,7 @@ interface DynamoDbTypeFormat {
 const availableTypes: DynamoDbTypeFormat[] = [
   { type: 'string', prop: 'S' },
   { type: 'number', prop: 'N' },
-  { type: 'boolean', prop: 'B' }
+  { type: 'boolean', prop: 'BOOL' },
 ]
 const objToDynamoItem = (obj: object) => {
   const dynamoItem = {} as any
@@ -34,11 +31,11 @@ const objToDynamoItem = (obj: object) => {
     if (!type) {
       logMessage('Type not supported for conversion to dynamodb', { key, value, type })
       // (TODO): throw error?
-      continue;
+      continue
     }
 
     dynamoItem[key] = {
-      [prop]: value
+      [prop]: value.toString ? value.toString() : value,
     }
   }
 
