@@ -9,7 +9,12 @@ export default class IdeaService {
     this.repository = repository
   }
 
-  async createIdea(email: string, subject: string, description: string, type: IdeaType): Promise<IdeaDto> {
+  async createIdea(
+    email: string,
+    subject: string,
+    description: string,
+    type: IdeaType
+  ): Promise<IdeaDto> {
     const idea = Idea.generate(email, subject, description, type)
     idea.preCreate()
     const ideaDto: IdeaDto = await this.repository.save(idea.toDto())
