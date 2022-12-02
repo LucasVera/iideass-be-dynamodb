@@ -16,6 +16,7 @@ phases:
       - echo "Installing dependencies"
       - npm install
       - npm install -g serverless
+      - npx sls --version
   build:
     commands:
       - echo "Running tests (SKIPPED FOR NOW)"
