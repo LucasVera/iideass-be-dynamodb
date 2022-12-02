@@ -136,6 +136,8 @@ export default class IdeaService {
 
   async validateIdeaDoesntExist(email: string, subject: string): Promise<void> {
     const dbIdea = await this.findOne(email, subject)
+    if (!dbIdea) return
+
     const dto = dbIdea.toDto()
     if (dto && dto.email) throw new BadInputError('Idea already exists', { email, subject })
   }
