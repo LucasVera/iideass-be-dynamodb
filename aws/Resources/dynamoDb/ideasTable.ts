@@ -6,28 +6,28 @@ export default {
       AttributeDefinitions: [
         {
           AttributeName: 'email',
-          AttributeType: 'S'
+          AttributeType: 'S',
         },
         {
           AttributeName: 'subject',
-          AttributeType: 'S'
+          AttributeType: 'S',
         },
       ],
       KeySchema: [
         {
           AttributeName: 'email',
-          KeyType: 'HASH'
+          KeyType: 'HASH',
         },
         {
           AttributeName: 'subject',
-          KeyType: 'RANGE'
-        }
+          KeyType: 'RANGE',
+        },
       ],
       ProvisionedThroughput: {
-        ReadCapacityUnits: 2,
-        WriteCapacityUnits: 2
+        ReadCapacityUnits: process.env.IDEAS_TABLE_READ_CAPACITY, // setup in pipeline only - not taken into the app
+        WriteCapacityUnits: process.env.IDEAS_TABLE_WRITE_CAPACITY, // setup in pipeline only - not taken into the app
       },
-      TableName: '${env:IDEAS_TABLE_NAME}'
-    }
-  }
+      TableName: process.env.IDEAS_TABLE_NAME,
+    },
+  },
 }

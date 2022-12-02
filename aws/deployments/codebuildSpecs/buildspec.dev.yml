@@ -2,20 +2,22 @@ version: 0.2
 
 env:
   variables:
-    STAGE: "dev"
+    STAGE: 'dev'
+    IDEAS_TABLE_READ_CAPACITY: 2
+    IDEAS_TABLE_WRITE_CAPACITY: 2
   parameter-store:
     IDEAS_TABLE_NAME: /iideass/dev/be/IDEAS_TABLE_NAME
 phases:
   install:
     runtime-versions:
-      nodejs: 14
+      nodejs: 16
   pre_build:
     commands:
       - echo "Installing dependencies"
       - npm ci
   build:
     commands:
-      - echo "Running tests (SKIPPED FOR NOW STEP)"
+      - echo "Running tests (SKIPPED FOR NOW)"
       # - npm run test
       - echo "Building project"
       - npm run build

@@ -1,5 +1,5 @@
-import type { AWS } from '@serverless/typescript';
-import * as functions from '@functions/index';
+import type { AWS } from '@serverless/typescript'
+import * as functions from '@functions/index'
 
 // Resources
 import Resources from './aws/Resources'
@@ -11,7 +11,7 @@ const serverlessConfiguration: AWS = {
   useDotenv: true,
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs16.x',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -19,7 +19,31 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      NODE_ENV: process.env.NODE_ENV || 'production',
       IDEAS_TABLE_NAME: process.env.IDEAS_TABLE_NAME || '${env:IDEAS_TABLE_NAME}',
+    },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: [
+              'dynamodb:List*',
+              'dynamodb:BatchGet*',
+              'dynamodb:DescribeStream',
+              'dynamodb:DescribeTable',
+              'dynamodb:Get*',
+              'dynamodb:Query',
+              'dynamodb:Scan',
+              'dynamodb:BatchWrite*',
+              'dynamodb:CreateTable',
+              'dynamodb:Delete*',
+              'dynamodb:Update*',
+              'dynamodb:PutItem',
+            ],
+          },
+        ],
+      },
     },
   },
   // import the function via paths
@@ -30,7 +54,7 @@ const serverlessConfiguration: AWS = {
       minify: false,
       sourcemap: true,
       exclude: ['aws-sdk'],
-      target: 'node14',
+      target: 'node16',
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,
@@ -38,6 +62,6 @@ const serverlessConfiguration: AWS = {
   },
   resources: { Resources },
   functions,
-};
+}
 
-module.exports = serverlessConfiguration;
+module.exports = serverlessConfiguration

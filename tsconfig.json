@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -13,10 +11,7 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts",
-    "serverless.ts"
-  ],
+  "include": ["src/**/*.ts", "serverless.ts"],
   "exclude": [
     "node_modules/**/*",
     ".esbuild/**/*",
@@ -26,8 +21,6 @@
     ".vscode/**/*"
   ],
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "require": ["tsconfig-paths/register"]
   }
 }
