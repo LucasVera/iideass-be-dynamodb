@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    STAGE: 'dev'
+    STAGE: "dev"
     IDEAS_TABLE_READ_CAPACITY: 2
     IDEAS_TABLE_WRITE_CAPACITY: 2
   parameter-store:
@@ -19,8 +19,6 @@ phases:
     commands:
       - echo "Running tests (SKIPPED FOR NOW)"
       # - npm run test
-      - echo "Building project"
-      - npm run build
   post_build:
     commands:
       - echo "Deploying to dev environment"
