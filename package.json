@@ -7,8 +7,8 @@
     "start": "npx sls offline start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "npx prettier --write .",
-    "deploy": "npx sls deploy --aws-region $AWS_REGION --stage $STAGE --verbose",
-    "deploy:local": "npx sls deploy --aws-region us-east-1 --verbose"
+    "deploy": "npx sls deploy --region $AWS_REGION --stage $STAGE --verbose",
+    "deploy:local": "npx sls deploy --region us-east-1 --verbose"
   },
   "engines": {
     "node": ">=14.15.0"

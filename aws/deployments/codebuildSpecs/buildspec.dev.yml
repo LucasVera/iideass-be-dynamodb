@@ -14,8 +14,7 @@ phases:
   pre_build:
     commands:
       - echo "Installing dependencies"
-      - npm install
-      - npm install -g serverless
+      - npm ci
       - npx sls --version
   build:
     commands:
