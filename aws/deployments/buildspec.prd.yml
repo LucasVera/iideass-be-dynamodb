@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+  variables:
+    STAGE: "prd"
+    IDEAS_TABLE_READ_CAPACITY: 2
+    IDEAS_TABLE_WRITE_CAPACITY: 2
+    CYPRESS_API_URL: https://esjwzrx4ic.execute-api.us-east-1.amazonaws.com/dev
+  parameter-store:
+    IDEAS_TABLE_NAME: /iideass/prd/be/IDEAS_TABLE_NAME
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+  pre_build:
+    commands:
+      - echo "Installing dependencies"
+      - npm ci
+      - npx sls --version
+  build:
+    commands:
+      - echo "Running tests"
+      - npm run test
+  post_build:
+    commands:
+      - echo "Deploying to prd environment"
+      - npm run deploy
+      - echo "Preparing to run integration tests"
+      - chmod u+x ./scripts/cypress-dependencies.sh
+      - ./scripts/cypress-dependencies.sh
+      - npm run test:integration:verify
+      - echo "Running integration tests"
+      - npm run test:integration
