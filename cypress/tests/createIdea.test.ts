@@ -34,8 +34,7 @@ describe('POST /idea', () => {
 
       expect(isOkStatusCode).not.to.be.true
       expect(status).to.equal(400)
-      expect(body).to.have.property('success', false)
-      expect(body).to.have.property('error', 'Body cannot be empty.')
+      expect(body).to.have.property('message', 'Invalid request body')
     })
   })
 
