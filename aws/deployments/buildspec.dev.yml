@@ -25,8 +25,6 @@ phases:
     commands:
       - echo "Deploying to dev environment"
       - npm run deploy
-  post_deploy:
-    commands:
       - echo "Preparing to run integration tests"
       - chmod u+x ./scripts/cypress-dependencies.sh
       - ./scripts/cypress-dependencies.sh
