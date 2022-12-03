@@ -3,8 +3,8 @@ version: 0.2
 env:
   variables:
     STAGE: "prd"
-    IDEAS_TABLE_READ_CAPACITY: 2
-    IDEAS_TABLE_WRITE_CAPACITY: 2
+    IDEAS_TABLE_READ_CAPACITY: 5
+    IDEAS_TABLE_WRITE_CAPACITY: 5
     CYPRESS_API_URL: https://esjwzrx4ic.execute-api.us-east-1.amazonaws.com/dev
   parameter-store:
     IDEAS_TABLE_NAME: /iideass/prd/be/IDEAS_TABLE_NAME

@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "be6c6812-8a1e-4500-8fef-82161e6afeb2",
+		"name": "Iideas-dynamodb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Idea",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@test.com\",\r\n    \"subject\": \"test subject\",\r\n    \"description\": \"Test description\",\r\n    \"ideaType\": \"Vacation trip\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/idea",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"idea"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update idea",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@test.com\",\r\n    \"subject\": \"test subject\",\r\n    \"description\": \"Updated description\",\r\n    \"ideaType\": \"Other idea\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/idea",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"idea"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find all user ideas",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/ideas?email=test@test.com",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ideas"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Idea",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/idea?email=test@test.com&subject=test subject",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"idea"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.com"
+						},
+						{
+							"key": "subject",
+							"value": "test subject"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete idea",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/idea?email=test@test.com&subject=test subject",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"idea"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.com"
+						},
+						{
+							"key": "subject",
+							"value": "test subject"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://b9k5bdqsua.execute-api.us-east-1.amazonaws.com/prd",
+			"type": "default"
+		},
+		{
+			"key": "dev-url",
+			"value": "https://esjwzrx4ic.execute-api.us-east-1.amazonaws.com/dev",
+			"type": "default"
+		},
+		{
+			"key": "prd-url",
+			"value": "https://b9k5bdqsua.execute-api.us-east-1.amazonaws.com/prd",
+			"type": "default"
+		}
+	]
+}
