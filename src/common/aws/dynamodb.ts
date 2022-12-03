@@ -79,8 +79,6 @@ const updateItem = (
     Key,
   }
 
-  console.log('¿input', input)
-
   const command = new UpdateItemCommand(input)
 
   return client.send(command)

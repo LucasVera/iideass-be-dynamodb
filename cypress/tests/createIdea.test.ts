@@ -11,8 +11,6 @@ describe('POST /idea', () => {
 
   it("creates a new idea", () => {
     const url = `${apiBaseUrl}/idea`
-    cy.log('url', url)
-    console.log('url', url)
     const createIdeaBody = createIdeaMock
     cy.request('POST', url, createIdeaBody).then(() => {
       cy.assertIdeaExists()
