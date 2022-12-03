@@ -26,4 +26,5 @@ phases:
       - echo "Deploying to dev environment"
       - npm run deploy
       - echo "Running integration tests"
+      - npm run test:integration:verify
       - npm run test:integration
