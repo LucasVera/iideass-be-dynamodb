@@ -34,12 +34,16 @@ Main tech used to build the project are
 
 ## Deployments
 This api is deployed in AWS as a serverless app. The following diagram shows the high-level overview of the cloud resources and general flow of the serverless app
+![High-level overview](https://github.com/LucasVera/iideass-be-dynamodb/blob/55eba37f34e17729c2319a610f1d6e969a9cdddc/docs/images/AWS%20high-level%20overview.png)
+
 
 ## CI/CD
 This api is connected to a CI/CD pipeline for easier deployments. The following diagram shows a good approach to handle CI/CD in a larger team
+![CI/CD diagram](https://github.com/LucasVera/iideass-be-dynamodb/blob/55eba37f34e17729c2319a610f1d6e969a9cdddc/docs/images/CI-CD.png)
 
 ## How to test
 This api ships with a postman collection that's ready to use to test the api. In order to use it, simply clone the project, open postman and import the collection from `docs/Iideas-dynamodb.postman_collection.json`. It uses collection variables to handle the url. If you wish to switch between environments, it's enough to swap the `url` parameter with the appropriate `dev-url` or `prd-url`. The following image may help
+![Replace url postman](https://github.com/LucasVera/iideass-be-dynamodb/blob/55eba37f34e17729c2319a610f1d6e969a9cdddc/docs/images/postman-collection-replace-vars.JPG)
 
 ### How to run
 Follow the steps below to install and run in your local machine
