@@ -59,7 +59,7 @@ export default class Idea extends Model {
     const currentTimestamp = getUnixTimestamp()
     this.updatedAt = currentTimestamp
     this.deletedAt = currentTimestamp
-    this.subject = `${this.subject}-${currentTimestamp.toString()}`
+    this.subject = `${this.subject}-${currentTimestamp}`
   }
 
   static generate = (email: string, subject: string, description: string, ideaType: IdeaType) =>

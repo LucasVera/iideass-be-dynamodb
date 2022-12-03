@@ -104,7 +104,7 @@ export default class IdeaService {
     return true
   }
 
-  async deleteIdea(idea: Idea): Promise<number> {
+  async deleteIdea(idea: Idea): Promise<IdeaDto> {
     // delete first, then re-create
     const ideaDto = idea.toDto()
     const key = {
@@ -118,7 +118,7 @@ export default class IdeaService {
 
     idea.preDelete()
 
-    const deletedIdea = await this.repository.save(idea.toDto())
+    const deletedIdea: IdeaDto = await this.repository.save(idea.toDto())
 
     return deletedIdea
   }

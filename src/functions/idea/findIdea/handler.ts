@@ -8,24 +8,23 @@ import { APIGatewayEvent } from 'aws-lambda'
 
 const { IDEAS_TABLE_NAME: TableName } = process.env
 
-const deleteIdea = async (event: APIGatewayEvent) => {
+const findIdea = async (event: APIGatewayEvent) => {
   try {
     validateInput(event.queryStringParameters)
 
     const { email, subject } = event.queryStringParameters
 
     const service = new IdeaService(new DynamoRepository({ TableName }))
+    const dbIdea = await service.findOne(email, subject)
 
-    const dbIdea = await service.findAndValidateIdeaExists(email, subject)
-
-    const deletedIdea = await service.deleteIdea(dbIdea)
+    const idea = dbIdea && dbIdea.toDto ? dbIdea.toDto() : null
 
     return successResponse({
-      deletedIdea,
+      idea
     })
   } catch (ex) {
     return handleCatch(ex)
   }
 }
 
-export const main = middyfy(deleteIdea, { validateEmptyQueryString: true })
+export const main = middyfy(findIdea, { validateEmptyQueryString: true })
