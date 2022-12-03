@@ -25,9 +25,11 @@ phases:
     commands:
       - echo "Deploying to dev environment"
       - npm run deploy
+  post_deploy:
+    commands:
       - echo "Preparing to run integration tests"
-      - chmod u+x ./scripts/cypress-dendencies.sh
-      - ./scripts/cypress-dendencies.sh
-      - echo "Running integration tests"
+      - chmod u+x ./scripts/cypress-dependencies.sh
+      - ./scripts/cypress-dependencies.sh
       - npm run test:integration:verify
+      - echo "Running integration tests"
       - npm run test:integration
