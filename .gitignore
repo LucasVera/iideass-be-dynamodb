@@ -8,9 +8,14 @@ jspm_packages
 # esbuild directories
 .esbuild
 
+# cypress
+cypress.env.json
+cypress/screenshots
+cypress/videos
 
 # Other
 .env
 .vscode
 npm-debug.log
 dist
+

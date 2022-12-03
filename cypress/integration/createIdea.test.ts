@@ -2,7 +2,7 @@
 
 import createIdeaMock from "../support/mocks/createIdeaMock"
 
-const apiBaseUrl = 'http://localhost:3000/dev'
+const apiBaseUrl = Cypress.env('CYPRESS_API_URL')
 
 describe('POST /idea', () => {
   afterEach(() => {
@@ -11,6 +11,8 @@ describe('POST /idea', () => {
 
   it("creates a new idea", () => {
     const url = `${apiBaseUrl}/idea`
+    cy.log('url', url)
+    console.log('url', url)
     const createIdeaBody = createIdeaMock
     cy.request('POST', url, createIdeaBody).then(() => {
       cy.assertIdeaExists()

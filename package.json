@@ -8,6 +8,8 @@
     "test": "jest",
     "test:ci": "jest --ci",
     "test:watch": "jest --watchAll",
+    "test:integration": "npx cypress run",
+    "test:integration:local": "npx cypress run",
     "prettier": "npx prettier --write .",
     "deploy": "npx sls deploy --region $AWS_REGION --stage $STAGE --verbose",
     "deploy:local": "npx sls deploy --region us-east-1 --verbose"
@@ -28,6 +30,7 @@
     "@types/jest-when": "^3.5.2",
     "@types/node": "^14.14.25",
     "cypress": "^11.2.0",
+    "dotenv": "^16.0.3",
     "esbuild": "^0.14.11",
     "jest": "^29.3.1",
     "jest-when": "^3.5.2",

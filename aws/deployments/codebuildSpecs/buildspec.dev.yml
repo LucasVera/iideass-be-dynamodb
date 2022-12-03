@@ -5,6 +5,7 @@ env:
     STAGE: "dev"
     IDEAS_TABLE_READ_CAPACITY: 2
     IDEAS_TABLE_WRITE_CAPACITY: 2
+    CYPRESS_API_URL: https://esjwzrx4ic.execute-api.us-east-1.amazonaws.com/dev
   parameter-store:
     IDEAS_TABLE_NAME: /iideass/dev/be/IDEAS_TABLE_NAME
 phases:
@@ -24,3 +25,5 @@ phases:
     commands:
       - echo "Deploying to dev environment"
       - npm run deploy
+      - echo "Running integration tests"
+      - npm run test:integration

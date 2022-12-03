@@ -15,6 +15,7 @@ const serverlessConfiguration: AWS = {
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
+      metrics: true,
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
@@ -46,6 +47,12 @@ const serverlessConfiguration: AWS = {
         ],
       },
     },
+    logs: {
+      httpApi: true,
+    },
+    logRetentionInDays: 30,
+    memorySize: 512,
+
   },
   // import the function via paths
   package: { individually: true },

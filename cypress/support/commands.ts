@@ -38,10 +38,10 @@ import baseIdeaMock from "./mocks/baseIdeaMock"
 //     }
 //   }
 // }
-
+const baseUrl = Cypress.env('CYPRESS_API_URL')
 Cypress.Commands.add('assertIdeaDoesntExist', () => {
   const { email, subject } = baseIdeaMock
-  const baseUrl = 'http://localhost:3000/dev'
+  // const baseUrl = Cypress.env('CYPRESS_API_URL')
   const url = `${baseUrl}/idea?email=${email}&subject=${subject}`
   cy.request(url).then((result) => {
     const {
@@ -59,7 +59,7 @@ Cypress.Commands.add('assertIdeaDoesntExist', () => {
 
 Cypress.Commands.add('assertIdeaExists', () => {
   const { email, subject } = baseIdeaMock
-  const baseUrl = 'http://localhost:3000/dev'
+  // const baseUrl = 'http://localhost:3000/dev'
   const url = `${baseUrl}/idea?email=${email}&subject=${subject}`
   cy.request(url).then((result) => {
     const {
@@ -78,7 +78,7 @@ Cypress.Commands.add('assertIdeaExists', () => {
 
 Cypress.Commands.add('deleteIdea', () => {
   const { email, subject } = baseIdeaMock
-  const baseUrl = 'http://localhost:3000/dev'
+  // const baseUrl = 'http://localhost:3000/dev'
   const url = `${baseUrl}/idea?email=${email}&subject=${subject}`
   cy.request({
     method: 'DELETE',
