@@ -10,6 +10,7 @@
     "test:watch": "jest --watchAll",
     "test:integration": "npx cypress run",
     "test:integration:local": "npx cypress run",
+    "test:verify": "npx cypress verify && npx cypress info",
     "prettier": "npx prettier --write .",
     "deploy": "npx sls deploy --region $AWS_REGION --stage $STAGE --verbose",
     "deploy:local": "npx sls deploy --region us-east-1 --verbose"
